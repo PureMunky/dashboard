@@ -1,0 +1,60 @@
+.example-widget {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.example-widget h3 {
+  margin: 0 0 1rem 0;
+  color: #667eea;
+  font-size: 1.5rem;
+}
+
+.example-widget p {
+  margin: 0.5rem 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.widget-demo {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.widget-demo button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.widget-demo button:hover {
+  background: #5568d3;
+}
+
+.widget-demo button:active {
+  transform: translateY(1px);
+}
+
+.widget-info {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.widget-props {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #e7f3ff;
+  border-left: 3px solid #667eea;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.widget-props strong {
+  color: #333;
+}
