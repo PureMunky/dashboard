@@ -18,23 +18,25 @@ async function getSharedScope() {
   const reactModule = await import('react');
   const reactDomModule = await import('react-dom');
 
+  // Structure expected by remoteEntry.init():
+  // The init function will organize these by scope
   return {
-    default: {
-      react: {
-        '19.2.0': {
-          get: async () => () => reactModule,
-          loaded: true,
-          from: 'dashboard',
-          eager: true
-        }
-      },
-      'react-dom': {
-        '19.2.0': {
-          get: async () => () => reactDomModule,
-          loaded: true,
-          from: 'dashboard',
-          eager: true
-        }
+    react: {
+      '19.2.0': {
+        get: async () => () => reactModule,
+        loaded: true,
+        from: 'dashboard',
+        eager: true,
+        scope: 'default'
+      }
+    },
+    'react-dom': {
+      '19.2.0': {
+        get: async () => () => reactDomModule,
+        loaded: true,
+        from: 'dashboard',
+        eager: true,
+        scope: 'default'
       }
     }
   };
