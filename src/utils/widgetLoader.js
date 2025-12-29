@@ -7,30 +7,33 @@ const loadedWidgets = new Map();
 
 // Initialize the shared scope for Module Federation
 // This is needed when dynamically loading remotes
-function getSharedScope() {
+async function getSharedScope() {
   // Check if __federation_shared__ exists globally (from build)
   if (typeof __federation_shared__ !== 'undefined') {
     return __federation_shared__;
   }
 
   // Otherwise, create it from our dependencies
-  // Import the shared modules that are available in this build
+  // The get function should return a factory that returns the module
+  const reactModule = await import('react');
+  const reactDomModule = await import('react-dom');
+
   return {
     default: {
       react: {
         '19.2.0': {
-          get: () => import('react'),
+          get: async () => () => reactModule,
           loaded: true,
           from: 'dashboard',
-          eager: false
+          eager: true
         }
       },
       'react-dom': {
         '19.2.0': {
-          get: () => import('react-dom'),
+          get: async () => () => reactDomModule,
           loaded: true,
           from: 'dashboard',
-          eager: false
+          eager: true
         }
       }
     }
@@ -64,7 +67,7 @@ export async function loadWidget(widgetConfig) {
 
     // Initialize the remote container with shared scope
     // This ensures React is shared between dashboard and widgets
-    const sharedScope = getSharedScope();
+    const sharedScope = await getSharedScope();
     await container.init(sharedScope);
 
     // Get the exposed module from the remote container
