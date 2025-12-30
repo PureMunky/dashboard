@@ -26,27 +26,14 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <div className="header-content">
-          <div className="header-text">
-            <h1>Micro-Frontend Dashboard</h1>
-            <p className="subtitle">Dynamically loaded widgets from remote repositories</p>
-          </div>
-          <ConfigManager
-            widgets={widgets}
-            onConfigUpdate={updateConfig}
-            onReset={resetConfig}
-          />
-        </div>
-      </header>
-
       <main className="app-main">
         <WidgetGrid widgets={widgets} widgetComponents={widgetComponents} />
       </main>
-
-      <footer className="app-footer">
-        <p>Built with Vite + React + Module Federation</p>
-      </footer>
+      <ConfigManager
+        widgets={widgets}
+        onConfigUpdate={updateConfig}
+        onReset={resetConfig}
+      />
     </div>
   )
 }

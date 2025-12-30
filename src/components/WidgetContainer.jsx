@@ -49,21 +49,17 @@ function WidgetLoading() {
 
 /**
  * Container component for each widget
- * Provides error boundary, loading states, and consistent styling
+ * Provides error boundary and loading states
+ * Widgets are self-contained and handle their own styling
  */
 export default function WidgetContainer({ widget, children }) {
   return (
     <div className="widget-container" data-widget-id={widget.id}>
-      <div className="widget-header">
-        <h2 className="widget-title">{widget.name}</h2>
-      </div>
-      <div className="widget-content">
-        <WidgetErrorBoundary widgetName={widget.name}>
-          <Suspense fallback={<WidgetLoading />}>
-            {children}
-          </Suspense>
-        </WidgetErrorBoundary>
-      </div>
+      <WidgetErrorBoundary widgetName={widget.name}>
+        <Suspense fallback={<WidgetLoading />}>
+          {children}
+        </Suspense>
+      </WidgetErrorBoundary>
     </div>
   );
 }

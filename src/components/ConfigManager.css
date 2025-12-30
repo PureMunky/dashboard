@@ -1,18 +1,25 @@
-/* Config Button */
+/* Config Button - Floating Bottom Right */
 .config-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
   background: #667eea;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  border-radius: 50px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s;
   font-weight: 500;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  z-index: 900;
 }
 
 .config-button:hover {
   background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
 }
 
 /* Modal Overlay */

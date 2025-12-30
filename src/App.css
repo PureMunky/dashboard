@@ -59,6 +59,7 @@
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
+  background: #f5f5f5;
 }
 
 .app-footer {
@@ -83,36 +84,9 @@
   }
 }
 
-/* Widget Container */
+/* Widget Container - minimal wrapper, widgets are self-contained */
 .widget-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.widget-container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.widget-header {
-  background: #f8f9fa;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.widget-title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.widget-content {
-  padding: 1.25rem;
-  min-height: 200px;
+  /* No styling - widgets handle their own appearance */
 }
 
 /* Loading States */
