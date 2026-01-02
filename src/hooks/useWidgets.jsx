@@ -12,6 +12,7 @@ import {
  *
  * @returns {Object} Widget state and management
  * @returns {Array} return.widgets - Array of widget configurations
+ * @returns {number} return.gridColumns - Number of columns in the grid
  * @returns {Object} return.widgetComponents - Map of widget ID to loaded component
  * @returns {boolean} return.loading - Loading state
  * @returns {Error|null} return.error - Error state
@@ -21,6 +22,7 @@ import {
  */
 export default function useWidgets() {
   const [widgets, setWidgets] = useState([]);
+  const [gridColumns, setGridColumns] = useState(3);
   const [widgetComponents, setWidgetComponents] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -52,11 +54,12 @@ export default function useWidgets() {
         setError(null);
 
         // Load widget configuration (from localStorage or file)
-        const widgetConfigs = await loadWidgetConfig();
-        setWidgets(widgetConfigs);
+        const config = await loadWidgetConfig();
+        setWidgets(config.widgets);
+        setGridColumns(config.gridColumns);
 
         // Load widget components
-        const components = await loadWidgets(widgetConfigs);
+        const components = await loadWidgets(config.widgets);
         setWidgetComponents(components);
       } catch (err) {
         console.error('Failed to initialize widgets:', err);
@@ -70,16 +73,20 @@ export default function useWidgets() {
   }, [refreshTrigger, loadWidgets]);
 
   // Update configuration and reload widgets
-  const updateConfig = useCallback(async (newWidgets) => {
+  const updateConfig = useCallback(async (newWidgets, newGridColumns) => {
     try {
       setLoading(true);
       setError(null);
 
+      // Use current gridColumns if not provided
+      const cols = newGridColumns !== undefined ? newGridColumns : gridColumns;
+
       // Save to localStorage
-      saveWidgetConfig(newWidgets);
+      saveWidgetConfig(newWidgets, cols);
 
       // Update state
       setWidgets(newWidgets);
+      setGridColumns(cols);
 
       // Reload widget components
       const components = await loadWidgets(newWidgets);
@@ -90,7 +97,7 @@ export default function useWidgets() {
     } finally {
       setLoading(false);
     }
-  }, [loadWidgets]);
+  }, [loadWidgets, gridColumns]);
 
   // Reset to default configuration
   const resetConfig = useCallback(async () => {
@@ -99,13 +106,14 @@ export default function useWidgets() {
       setError(null);
 
       // Reset localStorage and load from file
-      const defaultWidgets = await resetWidgetConfig();
+      const config = await resetWidgetConfig();
 
       // Update state
-      setWidgets(defaultWidgets);
+      setWidgets(config.widgets);
+      setGridColumns(config.gridColumns);
 
       // Reload widget components
-      const components = await loadWidgets(defaultWidgets);
+      const components = await loadWidgets(config.widgets);
       setWidgetComponents(components);
     } catch (err) {
       console.error('Failed to reset configuration:', err);
@@ -122,6 +130,7 @@ export default function useWidgets() {
 
   return {
     widgets,
+    gridColumns,
     widgetComponents,
     loading,
     error,

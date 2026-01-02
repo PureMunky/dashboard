@@ -62,24 +62,20 @@ Edit `public/widgets.json` to add widgets to your dashboard:
 
 ```json
 {
+  "gridColumns": 3,
   "widgets": [
     {
-      "id": "weather-widget",
       "name": "Weather",
       "url": "https://YOUR_USERNAME.github.io/weather-widget",
-      "scope": "weatherWidget",
-      "module": "./Widget",
+      "cols": 2,
+      "rows": 1,
       "props": {
         "city": "San Francisco"
       }
     },
     {
-      "id": "todo-widget",
       "name": "Todo List",
-      "url": "https://YOUR_USERNAME.github.io/todo-widget",
-      "scope": "todoWidget",
-      "module": "./Widget",
-      "props": {}
+      "url": "https://YOUR_USERNAME.github.io/todo-widget"
     }
   ]
 }
@@ -87,12 +83,73 @@ Edit `public/widgets.json` to add widgets to your dashboard:
 
 ### Configuration Fields
 
-- **id**: Unique identifier for the widget
-- **name**: Display name shown in the widget header
-- **url**: Base URL where the widget is hosted (GitHub Pages URL)
-- **scope**: Module Federation scope name (must match widget's `vite.config.js`)
-- **module**: Module path to import (typically `./Widget`)
-- **props**: Optional props to pass to the widget component
+#### Global Configuration
+
+- **gridColumns** *(optional)*: Number of columns in the dashboard grid
+  - Defaults to `3` if not provided
+  - Responsive: automatically adjusts to 2 columns on tablets, 1 column on mobile
+
+#### Widget Configuration
+
+Only **name** and **url** are required. All other fields have sensible defaults:
+
+- **name** *(required)*: Display name shown in the widget header
+- **url** *(required)*: Base URL where the widget is hosted (GitHub Pages URL)
+- **id** *(optional)*: Unique identifier for the widget
+  - Auto-generated from `name` (kebab-case) + random suffix if not provided
+  - Example: `"Weather"` → `"weather-a4f2"`
+- **module** *(optional)*: Module path to import
+  - Defaults to `"./Widget"` if not provided
+- **cols** *(optional)*: Number of grid columns the widget spans
+  - Defaults to `1` if not provided
+  - Example: `"cols": 2` makes widget twice as wide
+- **rows** *(optional)*: Number of grid rows the widget spans
+  - Defaults to `1` if not provided
+  - Example: `"rows": 2` makes widget twice as tall
+- **props** *(optional)*: Props to pass to the widget component
+  - Defaults to `{}` if not provided
+- **scope** *(optional)*: Module Federation scope name
+  - Not actively used by the loader (Module Federation handles this automatically)
+  - Safe to omit unless you need it for documentation purposes
+
+### Grid Layout Examples
+
+**Standard 3-column grid:**
+```json
+{
+  "gridColumns": 3,
+  "widgets": [
+    { "name": "Widget 1", "url": "..." },
+    { "name": "Widget 2", "url": "..." },
+    { "name": "Widget 3", "url": "..." }
+  ]
+}
+```
+
+**4-column grid with a featured widget spanning 2 columns:**
+```json
+{
+  "gridColumns": 4,
+  "widgets": [
+    { "name": "Featured", "url": "...", "cols": 2 },
+    { "name": "Small 1", "url": "..." },
+    { "name": "Small 2", "url": "..." }
+  ]
+}
+```
+
+**Mixed layout with different sizes:**
+```json
+{
+  "gridColumns": 3,
+  "widgets": [
+    { "name": "Large", "url": "...", "cols": 2, "rows": 2 },
+    { "name": "Tall", "url": "...", "rows": 2 },
+    { "name": "Wide", "url": "...", "cols": 2 },
+    { "name": "Regular", "url": "..." }
+  ]
+}
+```
 
 ## Managing Configuration
 

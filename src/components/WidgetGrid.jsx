@@ -5,9 +5,9 @@ import SortableWidgetContainer from './WidgetContainer';
 
 /**
  * Responsive grid layout for widgets with drag-and-drop reordering and focus mode
- * Automatically arranges widgets in a responsive grid
+ * Supports configurable grid columns and per-widget column/row spans
  */
-export default function WidgetGrid({ widgets, widgetComponents, onReorder, focusedWidgetId, onFocus, onExitFocus }) {
+export default function WidgetGrid({ widgets, widgetComponents, gridColumns = 3, onReorder, focusedWidgetId, onFocus, onExitFocus }) {
   const isFocusMode = focusedWidgetId !== null;
 
   // Configure drag sensors with activation distance to prevent accidental drags
@@ -72,7 +72,10 @@ export default function WidgetGrid({ widgets, widgetComponents, onReorder, focus
           items={displayWidgets.map(w => w.id)}
           strategy={rectSortingStrategy}
         >
-          <div className={`widget-grid ${isFocusMode ? 'focus-mode' : ''}`}>
+          <div
+            className={`widget-grid ${isFocusMode ? 'focus-mode' : ''}`}
+            style={{ '--grid-columns': gridColumns }}
+          >
             {displayWidgets.map((widget) => {
               const WidgetComponent = widgetComponents[widget.id];
 

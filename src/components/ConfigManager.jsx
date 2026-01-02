@@ -6,7 +6,7 @@ import './ConfigManager.css';
  * Configuration Manager Component
  * Allows users to export, import, and edit widget configuration
  */
-export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
+export default function ConfigManager({ widgets, gridColumns = 3, onConfigUpdate, onReset }) {
   const [isOpen, setIsOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [jsonText, setJsonText] = useState('');
@@ -19,7 +19,7 @@ export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
     setEditMode(false);
     setError(null);
     setSuccess(null);
-    setJsonText(JSON.stringify({ widgets }, null, 2));
+    setJsonText(JSON.stringify({ gridColumns, widgets }, null, 2));
   };
 
   const handleClose = () => {
@@ -30,7 +30,7 @@ export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
 
   const handleExport = () => {
     try {
-      exportWidgetConfig(widgets);
+      exportWidgetConfig(widgets, gridColumns);
       setSuccess('Configuration exported successfully!');
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
@@ -45,11 +45,11 @@ export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        const importedWidgets = importWidgetConfig(e.target.result);
-        onConfigUpdate(importedWidgets);
-        setSuccess(`Successfully imported ${importedWidgets.length} widget(s)!`);
+        const config = importWidgetConfig(e.target.result);
+        onConfigUpdate(config.widgets, config.gridColumns);
+        setSuccess(`Successfully imported ${config.widgets.length} widget(s)!`);
         setTimeout(() => setSuccess(null), 3000);
-        setJsonText(JSON.stringify({ widgets: importedWidgets }, null, 2));
+        setJsonText(JSON.stringify({ gridColumns: config.gridColumns, widgets: config.widgets }, null, 2));
       } catch (err) {
         setError(err.message);
       }
@@ -64,9 +64,9 @@ export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
 
   const handleImportText = () => {
     try {
-      const importedWidgets = importWidgetConfig(jsonText);
-      onConfigUpdate(importedWidgets);
-      setSuccess(`Successfully imported ${importedWidgets.length} widget(s)!`);
+      const config = importWidgetConfig(jsonText);
+      onConfigUpdate(config.widgets, config.gridColumns);
+      setSuccess(`Successfully imported ${config.widgets.length} widget(s)!`);
       setTimeout(() => setSuccess(null), 3000);
       setEditMode(false);
     } catch (err) {
@@ -87,8 +87,8 @@ export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
 
   const handleSaveEdit = () => {
     try {
-      const importedWidgets = importWidgetConfig(jsonText);
-      onConfigUpdate(importedWidgets);
+      const config = importWidgetConfig(jsonText);
+      onConfigUpdate(config.widgets, config.gridColumns);
       setSuccess('Configuration updated!');
       setTimeout(() => setSuccess(null), 3000);
       setEditMode(false);
@@ -174,7 +174,7 @@ export default function ConfigManager({ widgets, onConfigUpdate, onReset }) {
                     💾 Save Changes
                   </button>
                   <button onClick={() => {
-                    setJsonText(JSON.stringify({ widgets }, null, 2));
+                    setJsonText(JSON.stringify({ gridColumns, widgets }, null, 2));
                     setEditMode(false);
                   }} className="cancel-button">
                     Cancel

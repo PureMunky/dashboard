@@ -1,12 +1,9 @@
 {
+  "gridColumns": 3,
   "widgets": [
     {
-      "id": "example-widget",
       "name": "Example Widget",
-      "url": "https://YOUR_USERNAME.github.io/example-widget",
-      "scope": "exampleWidget",
-      "module": "./Widget",
-      "props": {}
+      "url": "https://YOUR_USERNAME.github.io/example-widget"
     }
   ]
 }

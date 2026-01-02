@@ -5,7 +5,7 @@ import WidgetGrid from './components/WidgetGrid'
 import ConfigManager from './components/ConfigManager'
 
 function App() {
-  const { widgets, widgetComponents, loading, error, updateConfig, resetConfig } = useWidgets();
+  const { widgets, gridColumns, widgetComponents, loading, error, updateConfig, resetConfig } = useWidgets();
   const [focusedWidgetId, setFocusedWidgetId] = useState(null);
 
   // Array move utility function
@@ -54,6 +54,7 @@ function App() {
         <WidgetGrid
           widgets={widgets}
           widgetComponents={widgetComponents}
+          gridColumns={gridColumns}
           onReorder={handleReorder}
           focusedWidgetId={focusedWidgetId}
           onFocus={handleWidgetFocus}
@@ -63,6 +64,7 @@ function App() {
       {!focusedWidgetId && (
         <ConfigManager
           widgets={widgets}
+          gridColumns={gridColumns}
           onConfigUpdate={updateConfig}
           onReset={resetConfig}
         />

@@ -70,7 +70,9 @@ export default function SortableWidgetContainer({ widget, children, isFocusMode,
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1
+    opacity: isDragging ? 0.5 : 1,
+    gridColumn: widget.cols > 1 ? `span ${widget.cols}` : undefined,
+    gridRow: widget.rows > 1 ? `span ${widget.rows}` : undefined
   };
 
   return (
