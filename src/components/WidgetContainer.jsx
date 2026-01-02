@@ -1,4 +1,6 @@
 import { Component, Suspense } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 /**
  * Error Boundary to catch errors in widget components
@@ -48,18 +50,61 @@ function WidgetLoading() {
 }
 
 /**
- * Container component for each widget
- * Provides error boundary and loading states
- * Widgets are self-contained and handle their own styling
+ * Sortable container component for each widget
+ * Provides drag-and-drop functionality, error boundary, and loading states
+ * Includes header with widget name, drag handle, and focus button
  */
-export default function WidgetContainer({ widget, children }) {
+export default function SortableWidgetContainer({ widget, children, isFocusMode, onFocus }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: widget.id,
+    disabled: isFocusMode
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1
+  };
+
   return (
-    <div className="widget-container" data-widget-id={widget.id}>
-      <WidgetErrorBoundary widgetName={widget.name}>
-        <Suspense fallback={<WidgetLoading />}>
-          {children}
-        </Suspense>
-      </WidgetErrorBoundary>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`widget-container ${isDragging ? 'dragging' : ''} ${isFocusMode ? 'focused' : ''}`}
+      data-widget-id={widget.id}
+    >
+      {!isFocusMode && (
+        <div className="widget-header" {...attributes} {...listeners}>
+          <div className="widget-header-drag-handle" title="Drag to reorder">
+            ⠿
+          </div>
+          <div className="widget-header-title">{widget.name}</div>
+          <button
+            className="widget-focus-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFocus(widget.id);
+            }}
+            title="Expand widget"
+          >
+            ⤢
+          </button>
+        </div>
+      )}
+      <div className="widget-content">
+        <WidgetErrorBoundary widgetName={widget.name}>
+          <Suspense fallback={<WidgetLoading />}>
+            {children}
+          </Suspense>
+        </WidgetErrorBoundary>
+      </div>
     </div>
   );
 }
